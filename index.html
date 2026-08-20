@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>پروپوزال اجرایی — اکوسیستم هوشمند CRM · ECRM · باشگاه مشتریان برای شبکه پزشکان و کلینیک‌های همکار</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f8f6;
+  --bg-soft:#eef5f1;
+  --surface:#ffffff;
+  --surface-2:#f2f7f4;
+  --surface-hover:#e9f2ec;
+  --border:#dfe9e2;
+  --border-soft:#e9f1ec;
+  --text:#213632;
+  --text-dim:#5f746e;
+  --text-faint:#8ea099;
+
+  --gold:#a9812f;
+  --gold-soft:#c9a459;
+  --gold-dim:rgba(169,129,47,.12);
+  --teal:#268f80;
+  --teal-soft:#4fb8ac;
+  --teal-dim:rgba(38,143,128,.11);
+  --rose:#c06e8a;
+  --rose-dim:rgba(192,110,138,.12);
+  --green:#3f9c72;
+  --green-dim:rgba(63,156,114,.13);
+  --red:#c8545c;
+  --red-dim:rgba(200,84,92,.11);
+  --purple:#7c6bc9;
+  --purple-dim:rgba(124,107,201,.12);
+  --blue:#4f88c4;
+  --blue-dim:rgba(79,136,196,.12);
+
+  --radius:16px;
+  --radius-sm:10px;
+  --font-ui: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --shadow-sm: 0 1px 2px rgba(33,54,50,.04), 0 1px 1px rgba(33,54,50,.03);
+  --shadow-md: 0 8px 24px rgba(33,54,50,.06), 0 2px 6px rgba(33,54,50,.04);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+html,body{margin:0;padding:0;}
+body{
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background:
+    radial-gradient(1100px 620px at 90% -10%, rgba(38,143,128,.07), transparent 58%),
+    radial-gradient(900px 520px at -10% 8%, rgba(192,110,138,.06), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  font-family:var(--font-ui);
+  line-height:1.7;
+  min-height:100vh;
+}
+::selection{background:var(--gold-dim);color:var(--text);}
+::-webkit-scrollbar{width:9px;height:9px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:20px;}
+@media (hover:hover){::-webkit-scrollbar-thumb:hover{background:#cfdcd4;}}
+
+a{color:var(--teal);}
+button{font-family:inherit;appearance:none;-webkit-appearance:none;border:none;background:transparent;}
+button,a,input,label,.phase-pill,.chip{touch-action:manipulation;cursor:pointer;}
+
+#app{max-width:1180px;margin:0 auto;padding:22px 20px 90px;}
+
+/* ---------- HEADER ---------- */
+header.top{
+  display:flex;align-items:center;gap:22px;
+  background:linear-gradient(160deg, var(--surface) 0%, var(--bg-soft) 100%);
+  border:1px solid var(--border-soft);
+  border-radius:22px;
+  padding:24px 28px;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+  box-shadow:var(--shadow-sm);
+}
+.brandmark{
+  width:52px;height:52px;flex:0 0 auto;
+}
+.title-block{flex:1 1 260px;min-width:220px;}
+.title-block h1{margin:0 0 5px;font-size:20px;font-weight:800;letter-spacing:-.2px;color:var(--text);}
+.title-block p{margin:0;color:var(--text-dim);font-size:13.5px;}
+.title-block .sub-eyebrow{
+  font-size:10.8px;letter-spacing:.13em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:7px;font-weight:700;
+}
+
+.gauge-wrap{display:flex;align-items:center;gap:14px;flex:0 0 auto;}
+.gauge-readout{text-align:center;min-width:76px;}
+.gauge-readout .num{font-size:26px;font-weight:800;color:var(--text);}
+.gauge-readout .lbl{font-size:11px;color:var(--gold);margin-top:2px;font-weight:600;}
+svg#gaugeSvg{overflow:visible;}
+.gauge-tick{stroke:var(--text-faint);stroke-width:1.4;}
+#needle{transform-origin:110px 115px;transition:transform .7s cubic-bezier(.2,.8,.2,1);}
+#needleHub{fill:var(--surface);stroke:var(--border);stroke-width:2;}
+
+/* ---------- TABS ---------- */
+nav.toptabs{
+  display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;
+  background:var(--surface);border:1px solid var(--border-soft);
+  border-radius:16px;padding:6px;box-shadow:var(--shadow-sm);
+}
+nav.toptabs button{
+  background:transparent;border:none;color:var(--text-dim);
+  padding:10px 15px;border-radius:11px;font-size:13.3px;font-weight:600;
+  cursor:pointer;transition:.15s;flex:1 1 auto;white-space:nowrap;
+}
+@media (hover:hover){nav.toptabs button:hover{color:var(--text);background:var(--surface-2);}}
+nav.toptabs button.active{background:var(--teal);color:#fff;}
+
+.tabpanel{display:none;}
+.tabpanel.active{display:block;animation:fade .25s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+/* ---------- CARDS ---------- */
+.card{
+  background:var(--surface);border:1px solid var(--border-soft);
+  border-radius:var(--radius);padding:22px 24px;margin-bottom:16px;
+  box-shadow:var(--shadow-sm);
+}
+.card h2{margin:0 0 11px;font-size:16.8px;font-weight:800;display:flex;align-items:center;gap:9px;color:var(--text);}
+.card h2 .n{
+  font-size:11px;color:var(--gold);font-weight:700;
+  border:1px solid rgba(169,129,47,.3);border-radius:7px;padding:3px 8px;background:var(--gold-dim);
+}
+.card p{color:var(--text-dim);font-size:14px;margin:0 0 10px;}
+.card p:last-child{margin-bottom:0;}
+.card .lead{font-size:15px;color:var(--text);}
+
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:14px;}
+.pillar{
+  background:var(--surface-2);border:1px solid var(--border-soft);border-radius:var(--radius-sm);
+  padding:15px 16px;
+}
+.pillar .ic{font-size:11px;color:var(--gold);margin-bottom:7px;letter-spacing:.04em;font-weight:700;}
+.pillar h3{margin:0 0 6px;font-size:13.8px;font-weight:700;color:var(--text);}
+.pillar p{margin:0;font-size:12.6px;color:var(--text-dim);}
+
+.gaps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px;}
+.gap-item{
+  border-right:3px solid var(--rose);background:var(--rose-dim);
+  border-radius:9px;padding:11px 13px;font-size:12.6px;color:var(--text);
+}
+
+.moat-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:9px;}
+.moat-list li{
+  display:flex;gap:10px;font-size:13px;color:var(--text-dim);background:var(--surface-2);
+  border-radius:10px;padding:12px 14px;border-right:3px solid var(--gold);
+}
+.moat-list b{color:var(--text);}
+
+table.compare{width:100%;border-collapse:collapse;margin-top:9px;font-size:12.6px;}
+table.compare th, table.compare td{
+  padding:10px 10px;text-align:center;border-bottom:1px solid var(--border-soft);
+}
+table.compare th{color:var(--text-dim);font-weight:700;font-size:11.6px;background:var(--surface-2);}
+table.compare th:first-child{border-top-right-radius:8px;}
+table.compare th:last-child{border-top-left-radius:8px;}
+table.compare td:first-child, table.compare th:first-child{text-align:right;color:var(--text);font-weight:600;}
+table.compare tr:last-child td{background:var(--gold-dim);font-weight:700;}
+.yes{color:var(--green);font-weight:700;}
+.no{color:var(--text-faint);}
+.partial{color:var(--gold);}
+.compare-scroll{overflow-x:auto;}
+
+.note-box{
+  border:1px dashed var(--border);border-radius:var(--radius-sm);
+  padding:13px 15px;font-size:12.6px;color:var(--text-dim);margin-top:11px;background:var(--bg-soft);
+}
+.note-box b{color:var(--text);}
+
+/* ---------- PERSONA SPECTRUM (signature element) ---------- */
+.spectrum-wrap{margin-top:18px;padding:22px 18px 14px;background:var(--surface-2);border:1px solid var(--border-soft);border-radius:var(--radius);}
+.spectrum-track{position:relative;height:6px;border-radius:6px;
+  background:linear-gradient(90deg, var(--rose) 0%, var(--gold-soft) 26%, var(--teal-soft) 52%, var(--purple) 76%, var(--green) 100%);
+  margin:0 6px 30px;
+}
+.spectrum-nodes{display:flex;justify-content:space-between;position:relative;top:-9px;}
+.spectrum-node{width:20px;height:20px;border-radius:50%;background:var(--surface);border:3px solid var(--border);position:relative;}
+.spectrum-node i{position:absolute;inset:3px;border-radius:50%;}
+.spectrum-labels{display:flex;justify-content:space-between;gap:8px;margin-top:2px;}
+.spectrum-label{flex:1;text-align:center;font-size:11.6px;color:var(--text-dim);font-weight:600;padding:0 2px;}
+.spectrum-label b{display:block;font-size:12.6px;color:var(--text);margin-bottom:2px;}
+
+table.persona-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:12.4px;}
+table.persona-table th{text-align:right;color:var(--text-dim);font-weight:700;font-size:11.4px;padding:9px 10px;border-bottom:1px solid var(--border);background:var(--surface-2);}
+table.persona-table td{padding:11px 10px;border-bottom:1px solid var(--border-soft);vertical-align:top;color:var(--text-dim);}
+table.persona-table td:first-child{font-weight:700;color:var(--text);white-space:nowrap;}
+
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:14px;}
+.ai-card{background:var(--surface-2);border:1px solid var(--border-soft);border-radius:var(--radius-sm);padding:15px 16px;}
+.ai-card .tag-mini{display:inline-block;font-size:10.3px;font-weight:700;color:var(--teal);background:var(--teal-dim);border-radius:6px;padding:2px 8px;margin-bottom:8px;}
+.ai-card h4{margin:0 0 6px;font-size:13.6px;font-weight:700;color:var(--text);}
+.ai-card p{margin:0;font-size:12.4px;color:var(--text-dim);}
+
+/* ---------- ROADMAP ---------- */
+.roadmap-layout{display:flex;gap:16px;align-items:flex-start;}
+.phase-rail{flex:0 0 236px;display:flex;flex-direction:column;gap:6px;position:sticky;top:16px;}
+.phase-pill{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface);border:1px solid var(--border-soft);
+  border-radius:13px;padding:10px 12px;cursor:pointer;text-align:right;
+  transition:.15s;width:100%;color:inherit;font-family:inherit;box-shadow:var(--shadow-sm);
+}
+@media (hover:hover){.phase-pill:hover{border-color:var(--teal-soft);background:var(--surface-2);}}
+.phase-pill.active{border-color:var(--teal);background:var(--teal-dim);}
+.phase-pill .pnum{
+  font-weight:700;font-size:13px;width:27px;height:27px;border-radius:9px;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;background:var(--surface-2);color:var(--text-dim);
+}
+.phase-pill.active .pnum{background:var(--teal);color:#fff;}
+.phase-pill.done .pnum{background:var(--green);color:#fff;}
+.phase-pill .ptext{flex:1;min-width:0;}
+.phase-pill .ptitle{font-size:12.7px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.phase-pill .pmeta{font-size:10.8px;color:var(--text-faint);margin-top:2px;}
+.phase-pill .pbar{height:3px;border-radius:3px;background:var(--surface-2);margin-top:6px;overflow:hidden;}
+.phase-pill .pbar i{display:block;height:100%;background:var(--teal);border-radius:3px;transition:width .4s;}
+
+.phase-content{flex:1;min-width:0;}
+.phase-head{background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius);padding:22px 24px;margin-bottom:14px;box-shadow:var(--shadow-sm);}
+.phase-head .eyebrow{font-size:11px;color:var(--gold);letter-spacing:.09em;text-transform:uppercase;margin-bottom:7px;font-weight:700;}
+.phase-head h2{margin:0 0 8px;font-size:19px;font-weight:800;color:var(--text);}
+.phase-head .dod{font-size:13px;color:var(--text-dim);background:var(--bg-soft);border-radius:10px;padding:11px 13px;margin-top:10px;border-right:3px solid var(--teal);}
+.phase-head .dod b{color:var(--text);}
+
+.controls-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0 16px;}
+.searchbox{flex:1 1 220px;background:var(--surface);border:1px solid var(--border-soft);border-radius:11px;padding:10px 14px;color:var(--text);font-size:13px;font-family:inherit;}
+.searchbox::placeholder{color:var(--text-faint);}
+.searchbox:focus{outline:none;border-color:var(--teal);}
+.chip{background:var(--surface);border:1px solid var(--border-soft);color:var(--text-dim);border-radius:20px;padding:6px 13px;font-size:11.8px;cursor:pointer;white-space:nowrap;transition:.15s;}
+@media (hover:hover){.chip:hover{border-color:var(--teal-soft);}}
+.chip.on{background:var(--teal);color:#fff;border-color:var(--teal);font-weight:600;}
+.toggle-pending{background:var(--surface);border:1px solid var(--border-soft);color:var(--text-dim);border-radius:11px;padding:9px 13px;font-size:12px;cursor:pointer;}
+.toggle-pending.on{color:#fff;border-color:var(--gold);background:var(--gold);}
+
+.section-block{margin-bottom:16px;}
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:2px 2px 8px;}
+.section-head h3{margin:0;font-size:13.6px;font-weight:700;color:var(--text-dim);display:flex;align-items:center;gap:8px;}
+.section-head h3 .cnt{font-size:10.6px;color:var(--text-faint);font-weight:400;}
+.mark-all{background:none;border:1px solid var(--border-soft);color:var(--text-faint);border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer;}
+@media (hover:hover){.mark-all:hover{color:var(--green);border-color:var(--green);}}
+
+.item{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px;transition:.15s;cursor:pointer;}
+@media (hover:hover){.item:hover{border-color:var(--teal-soft);}}
+.item.checked{opacity:.6;}
+.item.checked .item-title{text-decoration:line-through;text-decoration-color:var(--text-faint);}
+.item input[type=checkbox]{appearance:none;-webkit-appearance:none;width:20px;height:20px;flex:0 0 auto;border:1.6px solid var(--border);border-radius:6px;background:var(--bg-soft);cursor:pointer;position:relative;margin-top:1px;transition:.15s;}
+.item input[type=checkbox]:checked{background:var(--green);border-color:var(--green);}
+.item input[type=checkbox]:checked::after{content:'';position:absolute;right:6px;top:2px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(35deg);}
+.item-body{flex:1;min-width:0;}
+.item-title{font-size:13.7px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.item-desc{font-size:12.4px;color:var(--text-dim);line-height:1.6;}
+.item-tags{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap;}
+.tag{font-size:10px;border-radius:5px;padding:2px 7px;border:1px solid transparent;font-weight:600;}
+.tag[data-tag="پایه‌گذاری"]{background:rgba(142,160,153,.16);color:#5f746e;border-color:rgba(142,160,153,.3);}
+.tag[data-tag="فروش"]{background:var(--blue-dim);color:var(--blue);border-color:rgba(79,136,196,.3);}
+.tag[data-tag="هوش‌مصنوعی"]{background:var(--gold-dim);color:var(--gold);border-color:rgba(169,129,47,.32);}
+.tag[data-tag="بازاریابی"]{background:var(--teal-dim);color:var(--teal);border-color:rgba(38,143,128,.3);}
+.tag[data-tag="وفاداری"]{background:var(--rose-dim);color:var(--rose);border-color:rgba(192,110,138,.3);}
+.tag[data-tag="امنیت"]{background:var(--red-dim);color:var(--red);border-color:rgba(200,84,92,.3);}
+.tag[data-tag="طراحی"]{background:var(--purple-dim);color:var(--purple);border-color:rgba(124,107,201,.3);}
+.tag[data-tag="آموزش"]{background:var(--green-dim);color:var(--green);border-color:rgba(63,156,114,.3);}
+.tag[data-tag="درآمد"]{background:rgba(169,129,47,.16);color:#8a681f;border-color:rgba(169,129,47,.35);font-weight:700;}
+
+.notes-box{margin-top:6px;}
+.notes-box label{font-size:11.5px;color:var(--text-faint);display:block;margin-bottom:6px;}
+.notes-box textarea{width:100%;min-height:64px;background:var(--bg-soft);border:1px solid var(--border-soft);border-radius:10px;color:var(--text);font-family:inherit;font-size:12.6px;padding:9px 11px;resize:vertical;}
+.notes-box textarea:focus{outline:none;border-color:var(--teal);}
+
+.empty-state{text-align:center;padding:34px 10px;color:var(--text-faint);font-size:13px;}
+
+/* ---------- REVENUE / LAYERS ---------- */
+.layers{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+.layer{border-radius:13px;padding:15px 17px;border:1px solid var(--border-soft);display:flex;align-items:center;gap:14px;}
+.layer .lname{font-weight:700;font-size:13.6px;min-width:190px;color:var(--text);}
+.layer .ldesc{font-size:12.4px;color:var(--text-dim);flex:1;}
+.layer.b2b{background:var(--blue-dim);border-color:rgba(79,136,196,.25);}
+.layer.b2c{background:var(--teal-dim);border-color:rgba(38,143,128,.25);}
+.layer.loyalty{background:var(--rose-dim);border-color:rgba(192,110,138,.25);}
+.layer.ai{background:var(--gold-dim);border-color:rgba(169,129,47,.3);order:-1;}
+.layer.ai .lname{color:var(--gold);}
+
+.flow-row{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:16px;flex-wrap:wrap;}
+.flow-node{flex:1;min-width:120px;background:var(--surface-2);border:1px solid var(--border-soft);border-radius:12px;padding:13px 12px;text-align:center;}
+.flow-node .fn-num{font-size:10.5px;color:var(--gold);font-weight:700;margin-bottom:4px;}
+.flow-node .fn-name{font-size:13px;font-weight:700;color:var(--text);}
+.flow-node .fn-desc{font-size:11.4px;color:var(--text-dim);margin-top:4px;}
+.flow-arrow{color:var(--text-faint);font-size:18px;flex:0 0 auto;}
+@media (max-width:700px){.flow-arrow{transform:rotate(90deg);}}
+
+.stream-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px;}
+.stream-card{background:var(--surface-2);border:1px solid var(--border-soft);border-radius:var(--radius-sm);padding:16px;}
+.stream-card .sc-num{width:30px;height:30px;border-radius:9px;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13.5px;margin-bottom:10px;}
+.stream-card h4{margin:0 0 6px;font-size:13.5px;font-weight:700;color:var(--text);}
+.stream-card p{margin:0;font-size:12.4px;color:var(--text-dim);}
+
+/* ---------- COSTS / PACKAGES ---------- */
+.cost-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:12px;}
+.cost-kpi{background:var(--surface-2);border:1px solid var(--border-soft);border-radius:12px;padding:12px 13px;}
+.cost-kpi .k{font-size:11px;color:var(--text-faint);font-weight:600;}
+.cost-kpi .v{font-size:16.5px;font-weight:800;color:var(--text);margin-top:3px;}
+.cost-kpi .s{font-size:11.5px;color:var(--text-dim);margin-top:4px;}
+
+table.costs{width:100%;border-collapse:collapse;margin-top:10px;font-size:12.3px;}
+table.costs th{text-align:right;color:var(--text-dim);font-weight:700;font-size:11.3px;padding:9px;border-bottom:1px solid var(--border);vertical-align:top;background:var(--surface-2);}
+table.costs td{padding:10px 9px;border-bottom:1px solid var(--border-soft);vertical-align:top;}
+table.costs td:first-child{font-weight:700;color:var(--text);}
+
+.risk-low,.risk-med,.risk-high{display:inline-block;border-radius:999px;padding:2px 9px;font-size:10.5px;font-weight:700;}
+.risk-low{background:var(--green-dim);color:var(--green);border:1px solid rgba(63,156,114,.35);}
+.risk-med{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(169,129,47,.35);}
+.risk-high{background:var(--red-dim);color:var(--red);border:1px solid rgba(200,84,92,.35);}
+
+.assumption-list{margin:0;padding-right:18px;color:var(--text-dim);font-size:12.6px;}
+.assumption-list li{margin-bottom:6px;}
+
+.pkg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:12px;}
+.pkg-card{background:var(--surface-2);border:1px solid var(--border-soft);border-radius:var(--radius-sm);padding:17px 17px;display:flex;flex-direction:column;gap:8px;}
+.pkg-card.hi{border-color:var(--teal);background:var(--teal-dim);position:relative;}
+.pkg-card.hi::before{content:'پیشنهاد اصلی';position:absolute;top:-11px;right:16px;background:var(--teal);color:#fff;font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.pkg-card .pk-name{font-size:13.8px;font-weight:800;color:var(--text);}
+.pkg-card .pk-for{font-size:11.5px;color:var(--text-faint);font-weight:600;}
+.pkg-card ul{margin:6px 0 0;padding-right:16px;font-size:12.3px;color:var(--text-dim);}
+.pkg-card li{margin-bottom:5px;}
+
+.cta-box{margin-top:16px;background:linear-gradient(135deg, rgba(38,143,128,.09), rgba(169,129,47,.07));border:1px solid var(--border-soft);border-radius:var(--radius);padding:20px 22px;}
+.cta-box h3{margin:0 0 8px;font-size:16px;font-weight:800;color:var(--text);}
+.cta-box p{margin:0;font-size:13.5px;color:var(--text-dim);}
+
+/* ---------- FOOTER ---------- */
+footer{margin-top:26px;padding:16px 4px;text-align:center;color:var(--text-faint);font-size:11.5px;}
+.footer-actions{display:flex;justify-content:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+.footer-actions button{background:var(--surface);border:1px solid var(--border-soft);color:var(--text-dim);border-radius:10px;padding:8px 16px;font-size:12px;cursor:pointer;box-shadow:var(--shadow-sm);}
+@media (hover:hover){.footer-actions button:hover{color:var(--text);border-color:var(--teal-soft);}
+.footer-actions button.danger:hover{color:var(--red);border-color:var(--red);}}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:820px){
+  .roadmap-layout{flex-direction:column;}
+  .phase-rail{flex-direction:row;overflow-x:auto;width:100%;position:static;padding-bottom:4px;flex:none;}
+  .phase-pill{flex:0 0 200px;}
+  header.top{padding:18px;}
+  .gauge-wrap{width:100%;justify-content:center;}
+}
+@media (max-width:520px){
+  #app{padding:14px 10px 60px;}
+  nav.toptabs button{padding:9px 10px;font-size:12px;}
+  .card{padding:17px 15px;}
+  .layer{flex-direction:column;align-items:flex-start;}
+}
+
+/* ---------- PRINT ---------- */
+@media print{
+  body{background:#fff;color:#111;}
+  nav.toptabs,.controls-row,.phase-rail,.footer-actions,.gauge-wrap,.mark-all{display:none !important;}
+  .tabpanel{display:block !important;}
+  .item{border:1px solid #ccc;background:#fff;break-inside:avoid;}
+  .item-desc{color:#444;}
+  a[href]{color:#111;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header class="top">
+    <svg class="brandmark" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="26" cy="26" r="25" fill="none" stroke="#dfe9e2" stroke-width="1.4"/>
+      <circle cx="16" cy="18" r="5.2" fill="#c9a459"/>
+      <circle cx="37" cy="15" r="4" fill="#4fb8ac"/>
+      <circle cx="38" cy="35" r="5.2" fill="#c06e8a"/>
+      <circle cx="15" cy="36" r="4" fill="#7c6bc9"/>
+      <circle cx="26" cy="27" r="4.4" fill="#3f9c72"/>
+      <line x1="16" y1="18" x2="26" y2="27" stroke="#cfd9d3" stroke-width="1.6"/>
+      <line x1="37" y1="15" x2="26" y2="27" stroke="#cfd9d3" stroke-width="1.6"/>
+      <line x1="38" y1="35" x2="26" y2="27" stroke="#cfd9d3" stroke-width="1.6"/>
+      <line x1="15" y1="36" x2="26" y2="27" stroke="#cfd9d3" stroke-width="1.6"/>
+    </svg>
+    <div class="title-block">
+      <div class="sub-eyebrow">پروپوزال اجرایی · شبکه پزشکان و کلینیک‌های همکار</div>
+      <h1>اکوسیستم هوشمند CRM · ECRM · باشگاه مشتریان</h1>
+      <p>سامانه‌ای که هم‌زمان شبکه پزشکان همکار شما را مدیریت می‌کند، به هر کلینیک ابزار رشد هدیه می‌دهد، و برایتان کانال فروش و درآمد تازه می‌سازد.</p>
+    </div>
+    <div class="gauge-wrap">
+      <svg id="gaugeSvg" viewBox="0 0 220 140" width="150" height="98">
+        <g id="zones"></g>
+        <g id="ticks"></g>
+        <line id="needle" x1="110" y1="115" x2="110" y2="37" stroke="var(--teal)" stroke-width="3.5" stroke-linecap="round"/>
+        <circle id="needleHub" cx="110" cy="115" r="7"/>
+      </svg>
+      <div class="gauge-readout">
+        <div class="num" id="overallPct">۰٪</div>
+        <div class="lbl" id="overallCount">۰ از ۰</div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toptabs" role="tablist">
+    <button class="tab-btn active" data-tab="overview">چشم‌انداز و تمایز</button>
+    <button class="tab-btn" data-tab="market">تحلیل بازار و رقبا</button>
+    <button class="tab-btn" data-tab="ai">هوش مصنوعی یادگیرنده</button>
+    <button class="tab-btn" data-tab="roadmap">نقشه راه اجرا</button>
+    <button class="tab-btn" data-tab="revenue">مدل درآمدی و شبکه</button>
+    <button class="tab-btn" data-tab="invest">بسته‌ها و سرمایه‌گذاری</button>
+  </nav>
+
+  <!-- ================= OVERVIEW ================= -->
+  <section class="tabpanel active" id="tab-overview">
+
+    <div class="card">
+      <h2><span class="n">۰۱</span> چشم‌انداز</h2>
+      <p class="lead">هدف این پروژه ساختن یک نرم‌افزار نوبت‌دهی دیگر برای کلینیک‌های زیبایی نیست. هدف، ساختن مغز متفکر رابطه‌ی شما با کل شبکه‌ی پزشکان همکارتان است — سامانه‌ای که هر بیمار در هر کلینیک همکار را نه یک ردیف در دفتر، بلکه یک الگوی رفتار خرید مشخص می‌بیند: آیا این بیمار دنبال نتیجه‌ی واقعی و علمی است، یا اول چیزی که می‌پرسد تخفیف است؟ همین تشخیص، فروش هر کلینیک را رشد می‌دهد، چون دیگر با تخفیف عمومی به همه، سود له نمی‌شود.</p>
+      <div class="pillars">
+        <div class="pillar"><div class="ic">۰۱ / موتور هسته</div><h3>تشخیص رفتار خرید بیمار</h3><p>نتیجه‌محور، تخفیف‌محور یا لوکس‌پسند — هیچ نرم‌افزار زیبایی داخلی این تفکیک را ارائه نمی‌دهد.</p></div>
+        <div class="pillar"><div class="ic">۰۲ / معماری</div><h3>محصول دولایه</h3><p>یک سامانه مدیریتی برای شبکه‌ی پزشکان شما + یک پنل اختصاصی برای هر کلینیک همکار که بیمارانشان را مدیریت می‌کند.</p></div>
+        <div class="pillar"><div class="ic">۰۳ / کانال درآمد</div><h3>شبکه معرفی محصول</h3><p>معرفی محصولات جدید شما مستقیماً داخل پنل هر کلینیک همکار — بدون هزینه‌ی تبلیغات جداگانه.</p></div>
+        <div class="pillar"><div class="ic">۰۴ / مدل مالی</div><h3>سهم از فروش شبکه</h3><p>هر کلینیکی که پنل را به کلینیک دیگری معرفی کند، سهمی از فروش می‌گیرد — انگیزه‌ای که رقیب معمولی نمی‌تواند تکرار کند.</p></div>
+        <div class="pillar"><div class="ic">۰۵ / هویت دیجیتال</div><h3>وب‌سایت + ۵ مقاله سئو رایگان</h3><p>دارایی دیجیتالی که امروز کاملاً غایب است و می‌تواند فاصله‌ی رقابتی مهمی ایجاد کند.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۲</span> خلأهای واقعی بازار</h2>
+      <p>بررسی نرم‌افزارهای مدیریت کلینیک زیبایی فعال در ایران و همچنین بهترین نمونه‌های جهانی این حوزه نشان می‌دهد این ابزارها تک‌محصولی‌اند: فقط برای «مدیریت داخلی یک کلینیک» طراحی شده‌اند. هیچ‌کدام برای «توزیع‌کننده‌ای که شبکه‌ای از پزشکان و کلینیک‌ها را مدیریت می‌کند» طراحی نشده‌اند. این دقیقاً همان جایی است که فرصت شما قرار دارد.</p>
+      <div class="gaps">
+        <div class="gap-item">همه‌ی این نرم‌افزارها فقط باشگاه مشتریان و امتیازدهی عمومی دارند؛ هیچ‌کدام تحلیل رفتار خرید بیمار (نتیجه‌محور در برابر تخفیف‌محور) را ارائه نمی‌دهند.</div>
+        <div class="gap-item">هیچ‌کدام برای زنجیره‌ی توزیع یک برند طراحی نشده‌اند؛ امکان معرفی محصول جدید داخل سامانه‌ی نصب‌شده در کلینیک مشتری در هیچ‌کدام وجود ندارد.</div>
+        <div class="gap-item">هیچ‌کدام مدل کمیسیون یا سهم فروش برای معرفی‌کننده ندارند؛ فقط یک اشتراک ماهانه‌ی ساده می‌فروشند.</div>
+        <div class="gap-item">امروز شما هیچ وب‌سایت و محتوای سئویی ندارید، در حالی که برخی رقبای حوزه‌ی توزیع محصولات مشابه، وب‌سایت و محتوای آموزشی دارند.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۳</span> جدول مقایسه</h2>
+      <p>مقایسه با نرم‌افزارهای عمومی حوزه‌ی زیبایی در ایران، نمونه‌ی رقیب در توزیع محصولات مشابه، و شناخته‌شده‌ترین نمونه‌های جهانی این حوزه — نه یک محصول واحد، بلکه بهترین عملکرد هر کدام در هر ردیف.</p>
+      <div class="compare-scroll">
+      <table class="compare">
+        <thead><tr><th>ویژگی</th><th>نرم‌افزارهای عمومی زیبایی (ایران)</th><th>نمونه رقیب در توزیع مشابه</th><th>بهترین نمونه جهانی</th><th>راهکار پیشنهادی</th></tr></thead>
+        <tbody>
+          <tr><td>مدیریت بیمار + نوبت‌دهی + پرونده</td><td class="yes">بله</td><td class="no">خیر</td><td class="yes">بله</td><td class="yes">بله</td></tr>
+          <tr><td>باشگاه مشتریان با امتیاز و سطح</td><td class="yes">بله</td><td class="no">خیر</td><td class="yes">بله</td><td class="yes">بله</td></tr>
+          <tr><td>ارتباط امنی‌کانال (پیامک/واتس‌اپ/اینستاگرام)</td><td class="partial">محدود، اغلب فقط پیامک</td><td class="no">خیر</td><td class="yes">بله</td><td class="yes">بله</td></tr>
+          <tr><td>تشخیص رفتار و شخصیت خرید بیمار</td><td class="no">خیر</td><td class="no">خیر</td><td class="partial">جزئی</td><td class="yes">بله</td></tr>
+          <tr><td>مدل کمیسیون/سهم فروش برای معرفی</td><td class="no">خیر</td><td class="no">خیر</td><td class="no">خیر</td><td class="yes">بله</td></tr>
+          <tr><td>معرفی محصول جدید داخل پنل کلینیک</td><td class="no">خیر</td><td class="no">خیر</td><td class="no">خیر</td><td class="yes">بله</td></tr>
+          <tr><td>وب‌سایت + محتوای سئو/GEO/AEO رایگان</td><td class="no">خیر</td><td class="partial">محدود</td><td class="yes">بله</td><td class="yes">بله</td></tr>
+          <tr><td>آموزش و پشتیبانی حضوری طبق قرارداد</td><td class="no">معمولاً تلفنی/تیکتی</td><td class="partial">محدود</td><td class="partial">متفاوت</td><td class="yes">بله</td></tr>
+          <tr><td>هوشمندی که با ادامه‌ی استفاده دقیق‌تر می‌شود</td><td class="no">خیر</td><td class="no">خیر</td><td class="partial">جزئی</td><td class="yes">بله</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="note-box">نتیجه‌ی مستقیم این جدول: هیچ نرم‌افزار فعال در بازار ایران، ترکیب «مدیریت شبکه‌ی توزیع + هوش مصنوعی رفتار بیمار + کمیسیون معرفی + کانال تبلیغ محصول» را ارائه نمی‌دهد. یک کلینیک یا سازمانی که همه‌ی این‌ها را با هم بخواهد، عملاً باید سراغ یک راهکار اختصاصی برود.</div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۴</span> چرا رقبا نمی‌توانند این را تکرار کنند</h2>
+      <p>این بخش قلب مذاکره‌ی قرارداد است؛ نه یک شعار، بلکه چهار مکانیزم واقعی که هزینه‌ی جابه‌جایی به سیستم دیگر را بسیار بالا می‌برد:</p>
+      <ul class="moat-list">
+        <li><b>هوشمندی انباشته‌شده:</b> موتور تحلیل رفتار بیمار هرچه بیشتر استفاده شود، دقیق‌تر روی بیماران همان کلینیک تنظیم می‌شود. جابه‌جایی به سامانه‌ی دیگر یعنی از صفر شروع‌کردن این هوشمندی.</li>
+        <li><b>درآمد از دست‌رفته با ترک شبکه:</b> چون سهم فروش فقط از طریق مسیر رسمی این پلتفرم پرداخت می‌شود، کلینیکی که کلینیک دیگری را معرفی کرده، با خروج از سیستم، منبع درآمد ماهانه‌ی خودش را هم از دست می‌دهد.</li>
+        <li><b>تعهد آموزش و حضور فیزیکی:</b> طبق قرارداد، تیم پیاده‌سازی برای بازه‌ی مشخصی نزد سازمان/کلینیک حضور دارد، ایراد را رفع می‌کند و آموزش حضوری می‌دهد — چیزی که فروشنده‌ی نرم‌افزار عمومی ارائه نمی‌دهد.</li>
+        <li><b>این فقط یک ابزار نیست، بخشی از رابطه‌ی برند است:</b> چون پنل مستقیماً از طرف شما ارائه می‌شود، محتوای آموزشی محصول و معرفی محصول جدید در دل آن جا دارد — چیزی که یک نرم‌افزار عمومی هرگز نمی‌تواند تقلید کند، چون به محصولات و پروتکل‌های شما دسترسی ندارد.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۵</span> نحوه استفاده از این نقشه راه</h2>
+      <p>به تب «نقشه راه اجرا» بروید، فاز فعلی را از نوار کناری انتخاب کنید و همان‌طور که هر مورد تمام می‌شود تیک بزنید. پیشرفت به‌صورت خودکار در همین مرورگر ذخیره می‌شود. برای مرور اجرایی، از دکمه‌ی «چاپ / خروجی PDF» در پایین صفحه استفاده کنید.</p>
+    </div>
+
+  </section>
+
+  <!-- ================= MARKET ================= -->
+  <section class="tabpanel" id="tab-market">
+
+    <div class="card">
+      <h2><span class="n">۰۱</span> جایگاه فعلی و ریسک آن</h2>
+      <p>ارتباط امروز شما با شبکه‌ی پزشکان عمدتاً از طریق پیج اینستاگرام و تماس/پیام مستقیم مدیریت می‌شود. این کانال برای معرفی برند کافی بوده، اما هیچ حافظه‌ی ساختاریافته‌ای از رفتار خرید هر پزشک، چرخه‌ی مصرف کوکتل‌ها، یا ریسک گرایش او به رقیب نگه نمی‌دارد. نبود وب‌سایت اختصاصی نیز یعنی وقتی یک پزشک یا کلینیک به‌دنبال تأمین‌کننده یا نرم‌افزار مدیریتی می‌گردد، جای دیده‌شدن ندارید.</p>
+      <div class="note-box"><b>نکته کلیدی:</b> مشکل اصلی کمبود نرم‌افزار نیست؛ فاصله‌ی اطلاعاتی است. امروز فقط «چه کسی از ما خرید کرد؟» دیده می‌شود. آنچه باید دیده شود: «چه کسی، چرا، چه محصولی، با چه فاصله‌ای، و چه پیشنهادی بیشترین احتمال فروش را دارد؟»</div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۲</span> نرم‌افزارهای فعال در بازار ایران</h2>
+      <div class="compare-scroll">
+      <table class="persona-table">
+        <thead><tr><th>نرم‌افزار</th><th>قابلیت‌های کلیدی</th><th>محدودیت اصلی</th></tr></thead>
+        <tbody>
+          <tr><td>باستانی‌طب</td><td>مدیریت کامل کلینیک، باشگاه مشتریان، حسابداری، گزارش‌گیری</td><td>بدون مدل توزیع و کمیسیون؛ بدون تحلیل رفتار خرید</td></tr>
+          <tr><td>رخساره / چهره / آسانیتو</td><td>نوبت‌دهی، پرونده بیمار، ارتباط پیامکی</td><td>ابزار تک‌کلینیکی؛ بدون لایه‌ی مدیریت شبکه‌ی توزیع</td></tr>
+          <tr><td>رایطب</td><td>باشگاه مشتریان، بخش‌بندی، کمپین، گزارش سودآوری</td><td>محصول عمومی مطب/کلینیک، نه اختصاصی زنجیره‌ی توزیع یک برند</td></tr>
+          <tr><td>دوباره</td><td>باشگاه مشتریان پزشکی، بخش‌بندی، پیامک</td><td>بدون هوش مصنوعی رفتاری و بدون کانال تبلیغ محصول</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۳</span> بنچ‌مارک‌های جهانی</h2>
+      <p>در سطح جهانی، پلتفرم‌هایی مانند Zenoti و PatientNow برای کلینیک‌های زیبایی، اتوماسیون بازاریابی، پیش‌بینی ریزش مشتری و باشگاه وفاداری ارائه می‌دهند. این نمونه‌ها نشان می‌دهند بازار جهانی به سمت هوش مصنوعی و اتوماسیون رفتاری حرکت کرده — اما همه‌ی آن‌ها برای «یک کلینیک» طراحی شده‌اند، نه برای «توزیع‌کننده‌ای که شبکه‌ای از پزشکان همکار را مدیریت می‌کند و از فروش محصول درآمد دارد». این دقیقاً همان لایه‌ای است که در راهکار پیشنهادی اضافه می‌شود و در نمونه‌های جهانی هم دیده نمی‌شود.</p>
+      <div class="note-box">جمع‌بندی صادقانه: ادعای «هیچ نرم‌افزاری در دنیا این قابلیت‌ها را ندارد» دقیق نیست — اما ادعای درست و قابل‌دفاع این است: <b>«هیچ راهکاری، به‌طور اختصاصی برای یک توزیع‌کننده‌ی محصولات زیبایی در ایران، این ترکیب را ارائه نمی‌دهد.»</b> این جمله هم صادقانه‌تر است، هم برای مذاکره قوی‌تر.</div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۴</span> چرا الان</h2>
+      <div class="pillars">
+        <div class="pillar"><div class="ic">ریسک ۰۱</div><h3>رقبای حوزه توزیع در حال حرکت‌اند</h3><p>برخی از رقبای فعال در توزیع محصولات مشابه به سمت وب‌سایت، فروشگاه آنلاین و تولید محتوای آموزشی حرکت کرده‌اند.</p></div>
+        <div class="pillar"><div class="ic">ریسک ۰۲</div><h3>کلینیک‌ها به‌دنبال چنین سیستمی هستند</h3><p>اگر این ابزار را شما ندهید، کلینیک همکار آن را از جای دیگری تهیه می‌کند و وابستگی او به شما کمتر می‌شود.</p></div>
+        <div class="pillar"><div class="ic">ریسک ۰۳</div><h3>داده‌ی بیمار نهایی امروز در دسترس شما نیست</h3><p>برای اولین بار می‌توانید بفهمید بیماران نهایی در کل شبکه، دنبال چه چیزی هستند و کدام محصول جدید فرصت بیشتری دارد.</p></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ================= AI ================= -->
+  <section class="tabpanel" id="tab-ai">
+
+    <div class="card">
+      <h2><span class="n">۰۱</span> موتور هوش مصنوعی یادگیرنده</h2>
+      <p class="lead">بزرگ‌ترین آسیب باشگاه‌های مشتریان سنتی، ارائه‌ی تخفیف یکسان به همه‌ی بیماران است — این کار مستقیماً حاشیه سود کلینیک و قدرت خرید محصول را می‌خورد. موتور هوش مصنوعی این پلتفرم، به‌جای تخفیف عمومی، رفتار واقعی هر بیمار را می‌خواند و تشخیص می‌دهد که او را باید با «نتیجه‌ی علمی» قانع کرد یا با «پیشنهاد قیمتی». این تشخیص با هر جلسه‌ی جدید دقیق‌تر می‌شود — یعنی هرچه یک کلینیک بیشتر از سیستم استفاده کند، هوشمندی اختصاصی آن کلینیک بیشتر رشد می‌کند.</p>
+      <div class="spectrum-wrap">
+        <div class="spectrum-track"></div>
+        <div class="spectrum-nodes">
+          <div class="spectrum-node"><i style="background:var(--rose)"></i></div>
+          <div class="spectrum-node"><i style="background:var(--gold-soft)"></i></div>
+          <div class="spectrum-node"><i style="background:var(--teal-soft)"></i></div>
+          <div class="spectrum-node"><i style="background:var(--purple)"></i></div>
+          <div class="spectrum-node"><i style="background:var(--green)"></i></div>
+        </div>
+        <div class="spectrum-labels">
+          <div class="spectrum-label"><b>تخفیف‌محور</b>قیمتی، حساس به پروموشن</div>
+          <div class="spectrum-label"><b>محتاط</b>نیازمند اطمینان و شواهد</div>
+          <div class="spectrum-label"><b>نتیجه‌محور</b>علمی، دنبال اثربخشی</div>
+          <div class="spectrum-label"><b>لوکس‌پسند</b>تجربه‌گرا، خدمات ویژه</div>
+          <div class="spectrum-label"><b>وفادار</b>تکرارشونده، ارزش بلندمدت</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۲</span> پنج تیپ رفتاری و اقدام خودکار سیستم</h2>
+      <div class="compare-scroll">
+      <table class="persona-table">
+        <thead><tr><th>تیپ رفتاری</th><th>نشانه‌های رفتاری در سامانه</th><th>اقدام خودکار موتور هوشمند</th><th>اثر تجاری</th></tr></thead>
+        <tbody>
+          <tr><td>نتیجه‌محور / علمی</td><td>توجه به عکس قبل/بعد، مطالعه‌ی جزئیات محصول، بی‌تفاوتی نسبی به قیمت</td><td>ارسال توضیح علمی، تاییدیه‌ی محصول و پروتکل تزریق؛ بدون تخفیف</td><td>حفظ حاشیه سود و فروش کوکتل‌های تخصصی‌تر</td></tr>
+          <tr><td>تخفیف‌محور / قیمتی</td><td>واکنش سریع به پیام‌های تخفیف‌دار، استعلام اولیه‌ی هزینه</td><td>پیشنهاد باندل یا تخفیف زمان‌دار برای جلسه‌ی بعدی</td><td>فعال‌سازی ظرفیت خالی و حفظ چرخه‌ی مصرف</td></tr>
+          <tr><td>لوکس‌پسند / تجربه‌گرا</td><td>خرید بالای میانگین، ترجیح خدمات و زمان‌های اختصاصی</td><td>دعوت به پکیج ویژه و خدمات مراقبتی مکمل</td><td>افزایش میانگین درآمد به‌ازای هر بیمار</td></tr>
+          <tr><td>محتاط / نیازمند اطمینان</td><td>سوالات مکرر، تاخیر یا لغو نوبت‌های اولیه</td><td>ارسال شواهد، تجربه‌ی سایر بیماران و توضیح ساده</td><td>کاهش نرخ ریزش سرنخ‌ها</td></tr>
+          <tr><td>وفادار / تکرارشونده</td><td>مراجعه‌ی منظم در فواصل مشخص</td><td>امتیاز ویژه و ارتقای سطح باشگاه مشتریان</td><td>افزایش ارزش طول عمر بیمار</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="note-box">هر پیشنهاد هوشمند با یک توضیح کوتاه «چرا این پیشنهاد» همراه است — نه یک جعبه سیاه، بلکه ابزاری که کادر کلینیک به آن اعتماد می‌کند و می‌فهمد چرا سیستم این کار را پیشنهاد داده.</div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۳</span> قابلیت‌های تکمیلی هوش مصنوعی</h2>
+      <div class="ai-grid">
+        <div class="ai-card"><span class="tag-mini">پیش‌بینی</span><h4>هشدار ریزش مشتری و پزشک</h4><p>افت تعامل بیمار یا تاخیر غیرمعمول در سفارش پزشک، پیش از وقوع واقعی شناسایی و اعلام می‌شود.</p></div>
+        <div class="ai-card"><span class="tag-mini">پیشنهاد بعدی</span><h4>موتور Next Best Offer</h4><p>برای هر بیمار و هر پزشک، محصول یا پیشنهاد بعدی که بیشترین احتمال پذیرش را دارد به‌طور خودکار پیشنهاد می‌شود.</p></div>
+        <div class="ai-card"><span class="tag-mini">هوش تجمیعی</span><h4>تحلیل ناشناس بین‌کلینیکی</h4><p>داده‌ی خام هر کلینیک نزد همان کلینیک می‌ماند؛ آنچه به شما می‌رسد، الگوهای تجمیعی و ناشناس در سطح کل شبکه است — مثلاً چند درصد از بیماران شبکه دنبال محصول خاصی هستند.</p></div>
+        <div class="ai-card"><span class="tag-mini">راه‌اندازی محصول</span><h4>موتور معرفی هوشمند محصول جدید</h4><p>وقتی محصول تازه‌ای وارد سبد شما می‌شود، سیستم مشخص می‌کند کدام دسته از کلینیک‌ها بیشترین احتمال استقبال را دارند و معرفی را برای همان‌ها اولویت‌بندی می‌کند.</p></div>
+        <div class="ai-card"><span class="tag-mini">امتیازدهی</span><h4>رتبه‌بندی سلامت رابطه با هر پزشک</h4><p>ترکیب تازگی، فراوانی و ارزش خرید هر پزشک در یک امتیاز واحد، برای اولویت‌بندی پیگیری‌های تیم فروش.</p></div>
+        <div class="ai-card"><span class="tag-mini">شفافیت</span><h4>«چرا این پیشنهاد»</h4><p>هر خروجی هوش مصنوعی با یک دلیل کوتاه و قابل‌فهم همراه است تا اعتماد کادر درمانی به سیستم جلب شود.</p></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ================= ROADMAP ================= -->
+  <section class="tabpanel" id="tab-roadmap">
+    <div class="roadmap-layout">
+      <aside class="phase-rail" id="phaseRail"></aside>
+      <div class="phase-content" id="phaseContent"></div>
+    </div>
+  </section>
+
+  <!-- ================= REVENUE ================= -->
+  <section class="tabpanel" id="tab-revenue">
+
+    <div class="card">
+      <h2><span class="n">۰۱</span> معماری دو لایه</h2>
+      <p>دو محصول متصل به هم در یک اکوسیستم واحد: لایه‌ی مدیریتی برای خود شما، و لایه‌ی پنل اختصاصی برای هر کلینیک همکار — با یک موتور هوش مصنوعی مشترک در قلب هر دو، تا هیچ داده‌ای بین شبکه‌ی پزشکان و پرونده‌ی بیماران گم نشود.</p>
+      <div class="layers">
+        <div class="layer ai"><div class="lname">موتور هوش مصنوعی رفتار و پیشنهاد</div><div class="ldesc">داده‌ی هر دو لایه را می‌خواند، رفتار خرید بیمار و ریسک ریزش پزشک را تشخیص می‌دهد و پیشنهاد بعدی بهینه برمی‌گرداند.</div></div>
+        <div class="layer b2b"><div class="lname">سامانه‌ی مدیریت شبکه (برای شما)</div><div class="ldesc">مدیریت شبکه‌ی پزشکان و کلینیک‌ها، چرخه‌ی سفارش محصول، یادآوری تجدید سفارش و پایپ‌لاین فروش.</div></div>
+        <div class="layer b2c"><div class="lname">پنل اختصاصی کلینیک (برای هر همکار)</div><div class="ldesc">پرونده بیمار، نوبت‌دهی، پیام‌رسانی امنی‌کانال و اسلات معرفی محصولات جدید.</div></div>
+        <div class="layer loyalty"><div class="lname">باشگاه مشتریان و شبکه ارجاع</div><div class="ldesc">امتیاز، سطح‌بندی، کارت دیجیتال بیمار و موتور کمیسیون معرفی کلینیک به کلینیک.</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۲</span> مسیر جریان ارزش در شبکه</h2>
+      <p>هر حلقه‌ی این زنجیره، ارزش را به حلقه‌ی بعدی منتقل می‌کند و در نهایت به فروش بیشتر محصولات شما برمی‌گردد:</p>
+      <div class="flow-row">
+        <div class="flow-node"><div class="fn-num">۰۱</div><div class="fn-name">شما</div><div class="fn-desc">معرفی محصول و آموزش</div></div>
+        <div class="flow-arrow">←</div>
+        <div class="flow-node"><div class="fn-num">۰۲</div><div class="fn-name">پزشک/کلینیک</div><div class="fn-desc">خرید و استفاده از پنل</div></div>
+        <div class="flow-arrow">←</div>
+        <div class="flow-node"><div class="fn-num">۰۳</div><div class="fn-name">بیمار</div><div class="fn-desc">دریافت خدمت و بازخورد</div></div>
+        <div class="flow-arrow">←</div>
+        <div class="flow-node"><div class="fn-num">۰۴</div><div class="fn-name">هوش مصنوعی</div><div class="fn-desc">تحلیل رفتار و پیشنهاد بعدی</div></div>
+        <div class="flow-arrow">←</div>
+        <div class="flow-node"><div class="fn-num">۰۵</div><div class="fn-name">فروش بیشتر</div><div class="fn-desc">بازگشت به شما به‌عنوان سفارش تازه</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۳</span> برنامه‌ی شبکه‌ی همکاران (کمیسیون معرفی)</h2>
+      <p>هر کلینیکی که پنل را نصب کند، یک کد و لینک اختصاصی معرفی دریافت می‌کند. اگر کلینیک دیگری را به این اکوسیستم معرفی کند و آن کلینیک هم پنل را نصب کرده و از شما خرید کند، کلینیک معرفی‌کننده درصدی از آن فروش را به‌عنوان سهم دریافت می‌کند. این مدل، رشد شبکه را از حالت وابسته به تعداد ویزیتور خارج می‌کند و آن را به یک چرخه‌ی خودگستر تبدیل می‌کند.</p>
+      <div class="note-box">درصد دقیق سهم فروش باید در جلسه‌ی قرارداد و متناسب با حاشیه‌ی سود واقعی محصولات نهایی شود؛ این بخش فقط چارچوب و منطق مدل را نشان می‌دهد.</div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۴</span> سه جریان درآمدی</h2>
+      <div class="stream-grid">
+        <div class="stream-card"><div class="sc-num">۱</div><h4>قرارداد اختصاصی توسعه و بهره‌برداری</h4><p>ارزش اصلی پروژه که مستقیماً بین شما و تیم اجرا تعیین می‌شود.</p></div>
+        <div class="stream-card"><div class="sc-num">۲</div><h4>سهم از فروش شبکه‌ی معرفی</h4><p>هرچه شبکه‌ی کلینیک‌های متصل بزرگ‌تر شود، حجم فروش محصولات شما هم رشد می‌کند.</p></div>
+        <div class="stream-card"><div class="sc-num">۳</div><h4>کانال معرفی محصول جدید</h4><p>هر محصول تازه، بدون هزینه‌ی تبلیغات جداگانه، مستقیماً روی کارتابل پزشکان همکار دیده می‌شود.</p></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ================= INVEST ================= -->
+  <section class="tabpanel" id="tab-invest">
+
+    <div class="card">
+      <h2><span class="n">۰۱</span> چارچوب هزینه‌ی زیرساخت ماهانه</h2>
+      <p>این بخش فقط هزینه‌ی سرویس‌ها و زیرساخت لازم برای اجرای پلتفرم را پوشش می‌دهد؛ هیچ رقمی مربوط به هزینه‌ی توسعه یا قیمت نهایی پروژه در این بخش نیست — آن رقم جداگانه و بر اساس دامنه‌ی نهایی قرارداد مشخص می‌شود. اعداد زیر تخمینی‌اند و با رشد تعداد کلینیک‌های متصل، نرخ ارز و سیاست قیمت‌گذاری هر سرویس تغییر می‌کنند.</p>
+      <ul class="assumption-list">
+        <li>بازه‌ی زمانی: از شروع تا رسیدن به نسخه‌ی عملیاتی قابل‌نصب در چند کلینیک پایلوت.</li>
+        <li>فرض اولیه: بین ۵ تا ۲۰ کلینیک متصل در فاز شروع.</li>
+        <li>پیامک، واتس‌اپ و ایمیل بر اساس مصرف واقعی محاسبه می‌شود.</li>
+        <li>هزینه‌های یک‌باره مثل ثبت دامنه و مدارک کسب‌وکار جداگانه دیده شده‌اند.</li>
+      </ul>
+      <div class="cost-summary">
+        <div class="cost-kpi"><div class="k">سناریوی استاندارد (ماهانه)</div><div class="v">$۱۱۰ تا $۴۰۰</div><div class="s">بدون پیامک، واتس‌اپ و ایمیل مصرفی</div></div>
+        <div class="cost-kpi"><div class="k">سناریوی کم‌هزینه پایلوت (ماهانه)</div><div class="v">$۳۰ تا $۱۳۰</div><div class="s">با تکیه‌ی بیشتر بر ردیف‌های رایگان در فاز آزمایشی</div></div>
+        <div class="cost-kpi"><div class="k">هزینه‌ی مصرف ارتباطی</div><div class="v">متغیر</div><div class="s">پیامک/واتس‌اپ بر اساس تعداد کلینیک و حجم بیمار هرکدام</div></div>
+        <div class="cost-kpi"><div class="k">هزینه‌های یک‌باره</div><div class="v">کم تا متوسط</div><div class="s">دامنه، تاییدیه‌ها، راه‌اندازی اولیه‌ی سرویس‌ها</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۲</span> اسکوپ هزینه‌ی سرویس‌ها (سناریوی استاندارد)</h2>
+      <div class="compare-scroll">
+        <table class="costs">
+          <thead><tr><th>سرویس</th><th>هزینه‌ی تخمینی</th><th>یادداشت مصرف/ریسک قیمت</th></tr></thead>
+          <tbody>
+            <tr><td>زیرساخت پایگاه‌داده و ذخیره‌سازی امن ابری</td><td>از $۲۵/ماه</td><td><span class="risk-low">ریسک پایین</span> — با رشد تعداد کلینیک و حجم داده افزایش می‌یابد.</td></tr>
+            <tr><td>میزبانی و سرور با آپتایم بالا برای هر دو پنل</td><td>از $۲۰/ماه</td><td><span class="risk-med">ریسک متوسط</span> — وابسته به ترافیک هر دو پنل.</td></tr>
+            <tr><td>پردازش هوش مصنوعی برای تحلیل رفتار و پیشنهاد بعدی <span style="color:var(--text-faint);">(مبتنی بر Claude / Anthropic)</span></td><td>$۲۰ تا $۲۲۰+/ماه</td><td><span class="risk-high">ریسک بالا</span> — تابع تعداد تحلیل‌ها و حجم پیام تولیدشده.</td></tr>
+            <tr><td>امنیت، دامنه و گواهی رمزنگاری</td><td>$۰ تا $۲۰/ماه</td><td><span class="risk-low">ریسک پایین</span></td></tr>
+            <tr><td>پایش خطا و رفتار کاربر (ورودی مستقیم موتور هوشمند)</td><td>$۰ تا $۲۶+/ماه</td><td><span class="risk-med">ریسک متوسط</span></td></tr>
+            <tr><td>کانال پیامکی (سرشماره اختصاصی)</td><td>تراکنشی، به‌ازای هر پیامک</td><td><span class="risk-high">ریسک بالا</span> — تابع تعداد کلینیک و حجم بیمار هرکدام.</td></tr>
+            <tr><td>کانال واتس‌اپ بیزینس</td><td>تراکنشی، به‌ازای مکالمه/الگو</td><td><span class="risk-high">ریسک بالا</span> — تابع سیاست تعرفه‌ی منطقه‌ای.</td></tr>
+            <tr><td>درگاه پرداخت و تسویه‌ی خودکار کمیسیون</td><td>بدون آبونمان ثابت، کارمزد تراکنشی</td><td><span class="risk-med">ریسک متوسط</span> — تابع حجم تسویه‌ی کمیسیون و امتیاز.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۳</span> بسته‌های پیشنهادی همکاری</h2>
+      <p>این بسته‌بندی نقطه‌ی شروع مذاکره است، نه قیمت نهایی؛ رقم دقیق هر بسته بر اساس تعداد کلینیک هدف، بازه‌ی زمانی تحویل و حجم پشتیبانی حضوری در قرارداد نهایی مشخص می‌شود.</p>
+      <div class="pkg-grid">
+        <div class="pkg-card">
+          <div class="pk-name">بسته پایلوت</div>
+          <div class="pk-for">برای شروع با ۳ تا ۵ کلینیک منتخب</div>
+          <ul>
+            <li>سامانه‌ی مدیریت شبکه + پنل اختصاصی روی چند کلینیک اول</li>
+            <li>باشگاه مشتریان پایه و ارتباط امنی‌کانال</li>
+            <li>وب‌سایت پایه + ۵ مقاله سئو/GEO/AEO رایگان</li>
+            <li>آموزش حضوری راه‌اندازی</li>
+          </ul>
+        </div>
+        <div class="pkg-card hi">
+          <div class="pk-name">بسته شبکه‌ای</div>
+          <div class="pk-for">برای رول‌اوت به کل شبکه‌ی همکاران</div>
+          <ul>
+            <li>همه‌ی موارد بسته پایلوت</li>
+            <li>موتور هوش مصنوعی یادگیرنده‌ی تحلیل رفتار خرید بیمار</li>
+            <li>مدل کمیسیون/سهم فروش فعال برای معرفی کلینیک به کلینیک</li>
+            <li>اسلات تبلیغاتی محصولات جدید داخل پنل هر کلینیک</li>
+            <li>حضور تیم پیاده‌سازی طبق قرارداد برای رفع ایراد و آموزش مستمر</li>
+          </ul>
+        </div>
+        <div class="pkg-card">
+          <div class="pk-name">بسته توسعه مستمر</div>
+          <div class="pk-for">پس از رول‌اوت کامل</div>
+          <ul>
+            <li>یادگیری مستمر موتور هوشمند از بازخورد واقعی کلینیک‌ها</li>
+            <li>گزارش فصلی جایگاه رقابتی و پیشنهاد ویژگی جدید</li>
+            <li>افزودن شرکای اکوسیستم (بیمه، تامین مالی، خدمات جانبی کلینیک)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">۰۴</span> جمع‌بندی اجرایی</h2>
+      <p>برای فاز شروع، ترکیب زیرساخت پایه با سطح مصرف کنترل‌شده‌ی پردازش هوش مصنوعی، بهترین نسبت سرعت به هزینه را می‌دهد. پیشنهاد عملی این است که یک سقف هزینه‌ی ماهانه برای سرویس‌های مصرفی (هوش مصنوعی، پیامک، واتس‌اپ) تعریف شود و هم‌زمان با رشد تعداد کلینیک‌های متصل، این سقف بازبینی شود.</p>
+      <div class="cta-box">
+        <h3>شما فقط یک نرم‌افزار نمی‌خرید</h3>
+        <p>شما یک مزیت رقابتی پایدار می‌خرید که رقبایتان نمی‌توانند کپی کنند، یک کانال فروش تازه می‌سازید که تا امروز نداشته‌اید، و هوشی می‌سازید که هر روز باهوش‌تر می‌شود و متعلق به خود شماست.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <footer>
+    <div class="footer-actions">
+      <button id="btnPrint">چاپ / خروجی PDF</button>
+      <button id="btnReset" class="danger">پاک‌کردن کل پیشرفت</button>
+    </div>
+    پیشرفت شما به‌صورت خودکار در همین مرورگر ذخیره می‌شود و فقط برای خودتان قابل مشاهده است.
+  </footer>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+
+function qsa(selector, parent) {
+  return Array.prototype.slice.call((parent || document).querySelectorAll(selector));
+}
+
+var FA_DIGITS = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+function toFa(n){
+  return String(n).replace(/[0-9]/g, function(d){ return FA_DIGITS[+d]; });
+}
+
+/* ---------------- roadmap data (business-level only) ---------------- */
+var PHASES = [
+{
+  id:'p0', num:0, title:'پایه‌گذاری، هویت دیجیتال و آماده‌سازی', weeks:'هفته ۱ تا ۲',
+  dod:'محیط اختصاصی سازمان آماده است، هویت بصری نهایی شده، و مسیر اتصال به کانال‌های ارتباطی (پیامک/واتس‌اپ/اینستاگرام) آغاز شده است.',
+  sections:[
+    {name:'راه‌اندازی محیط اختصاصی', items:[
+      {id:'p0-1', title:'فراهم‌سازی فضای امن اختصاصی سازمان', desc:'با جداسازی کامل داده‌ی هر کلینیک از کلینیک دیگر، از همان روز اول.', tags:['پایه‌گذاری','امنیت']},
+      {id:'p0-2', title:'تعریف نقش‌های دسترسی', desc:'مدیر سازمان، ویزیتور/نماینده فروش، مدیر کلینیک، منشی/کارشناس پذیرش، بیمار.', tags:['پایه‌گذاری','امنیت']},
+      {id:'p0-3', title:'آغاز فرآیند تایید حساب رسمی واتس‌اپ بیزینس و اینستاگرام', desc:'این تاییدیه چند هفته زمان می‌برد؛ همین حالا شروع می‌شود تا فاز ارتباط با بیمار معطل نماند.', tags:['پایه‌گذاری','بازاریابی']},
+      {id:'p0-4', title:'ثبت‌نام درگاه پیامک با سرشماره اختصاصی', desc:'برای یادآوری نوبت، پیام مراقبت و کمپین‌های آینده.', tags:['پایه‌گذاری']}
+    ]},
+    {name:'هویت بصری اختصاصی', items:[
+      {id:'p0-5', title:'طراحی پالت رنگی و هویت بصری اختصاصی', desc:'حس لوکس کلینیکی، متناسب با جایگاه برند در حوزه زیبایی پزشکی؛ نه ظاهر یک نرم‌افزار اداری عمومی.', tags:['طراحی']},
+      {id:'p0-6', title:'طراحی نمونه‌ی اولیه‌ی قابل‌کلیک از هر دو پنل', desc:'یک ماکاپ تعاملی، پیش از شروع اجرای کامل، برای تایید مدیران.', tags:['طراحی']},
+      {id:'p0-7', title:'طراحی امکان برندسازی اختصاصی هر کلینیک', desc:'لوگو و رنگ هر کلینیک روی پنل خودش قابل تنظیم باشد، بدون گم‌شدن هویت شما به‌عنوان ارائه‌دهنده.', tags:['طراحی']}
+    ]}
+  ]
+},
+{
+  id:'p1', num:1, title:'سامانه مدیریت شبکه پزشکان و کلینیک‌ها', weeks:'هفته ۳ تا ۵',
+  dod:'تیم فروش شما می‌تواند کل رابطه‌ی هر پزشک، از اولین تماس تا سفارش‌های تکراری، کاملاً در یک پنل واحد مدیریت کند.',
+  sections:[
+    {name:'پروفایل ۳۶۰ درجه پزشک و کلینیک', items:[
+      {id:'p1-1', title:'صفحه پروفایل پزشک و کلینیک', desc:'هویت، اطلاعات تماس، آدرس کلینیک و ترجیح کانال ارتباطی.', tags:['فروش']},
+      {id:'p1-2', title:'تاریخچه کامل خرید محصول', desc:'چه محصولی، چه تعداد، هر چند وقت یک‌بار سفارش داده — پایه‌ی یادآوری تجدید سفارش.', tags:['فروش']},
+      {id:'p1-3', title:'وضعیت نصب پنل کلینیک', desc:'آیا این کلینیک پنل را نصب کرده یا نه؛ در صورت نصب، از کدام کلینیک معرفی شده.', tags:['فروش','درآمد']}
+    ]},
+    {name:'پایپ‌لاین فروش تصویری', items:[
+      {id:'p1-4', title:'بورد مرحله‌بندی‌شده‌ی فروش', desc:'سرنخ ← تماس اولیه ← ارسال نمونه ← اولین سفارش ← سفارش تکراری ← مشتری کلیدی.', tags:['فروش']},
+      {id:'p1-5', title:'جابه‌جایی ساده‌ی کارت پزشک بین مراحل', desc:'مناسب استفاده با موبایل روی جاده توسط ویزیتور.', tags:['فروش']}
+    ]},
+    {name:'هشدار سفارش مجدد و ریسک ریزش', items:[
+      {id:'p1-6', title:'پیش‌بینی زمان تقریبی اتمام موجودی هر کلینیک', desc:'بر اساس الگوی مصرف قبلی همان کلینیک.', tags:['هوش‌مصنوعی','فروش']},
+      {id:'p1-7', title:'هشدار خودکار سفارش عقب‌افتاده', desc:'مثلاً «این پزشک مدت‌هاست سفارش نداده، احتمال گرایش به رقیب بالاست».', tags:['هوش‌مصنوعی','فروش']},
+      {id:'p1-8', title:'صفحه اصلی «پیگیری‌های امروز» برای هر ویزیتور', desc:'یک صفحه ساده، نه ده‌ها منوی فرعی.', tags:['طراحی','فروش']}
+    ]},
+    {name:'مدیریت چند ویزیتور و منطقه', items:[
+      {id:'p1-9', title:'داشبورد عملکرد هر ویزیتور و منطقه', desc:'تعداد کلینیک فعال، حجم فروش، نرخ تبدیل — همه در یک نگاه.', tags:['فروش']},
+      {id:'p1-10', title:'دسترسی جداگانه هر ویزیتور به کلینیک‌های خودش', desc:'با امکان دید کامل برای مدیر فروش.', tags:['امنیت','فروش']}
+    ]}
+  ]
+},
+{
+  id:'p2', num:2, title:'پنل اختصاصی کلینیک: پرونده بیمار و نوبت‌دهی', weeks:'هفته ۶ تا ۸',
+  dod:'اولین کلینیک پایلوت می‌تواند نوبت‌دهی، پرونده بیمار و ثبت جلسات را کاملاً در پنل اختصاصی خودش انجام دهد — همان پنلی که به‌عنوان خدمت از طرف شما در اختیارش قرار می‌گیرد.',
+  sections:[
+    {name:'پرونده الکترونیک بیمار', items:[
+      {id:'p2-1', title:'صفحه پروفایل بیمار', desc:'هویت، تماس، نوع پوست/مو، حساسیت‌ها و نگرانی اصلی.', tags:['پایه‌گذاری']},
+      {id:'p2-2', title:'تاریخچه کامل جلسات و محصول مصرفی', desc:'هر جلسه با چه محصولی انجام شده، تاریخ جلسه بعدی پیشنهادی.', tags:['پایه‌گذاری']},
+      {id:'p2-3', title:'آرشیو امن عکس قبل/بعد', desc:'رمزنگاری‌شده و قابل مشاهده فقط برای کادر همان کلینیک.', tags:['امنیت']},
+      {id:'p2-4', title:'فرم رضایت‌نامه دیجیتال', desc:'امضای دیجیتال پیش از هر جلسه‌ی تزریقی.', tags:['پایه‌گذاری']}
+    ]},
+    {name:'نوبت‌دهی هوشمند', items:[
+      {id:'p2-5', title:'تقویم نوبت‌دهی به تفکیک پزشک/اتاق', desc:'رزرو، جابه‌جایی و لغو نوبت.', tags:['پایه‌گذاری']},
+      {id:'p2-6', title:'یادآوری خودکار نوبت پیش‌رو', desc:'پیامک/واتس‌اپ خودکار قبل از هر نوبت.', tags:['بازاریابی']},
+      {id:'p2-7', title:'لینک رزرو آنلاین اختصاصی هر کلینیک', desc:'برای بیمار، بدون نیاز به تماس تلفنی.', tags:['پایه‌گذاری']}
+    ]}
+  ]
+},
+{
+  id:'p3', num:3, title:'ECRM بیمار و کانال هوشمند معرفی محصول', weeks:'هفته ۹ تا ۱۱',
+  dod:'یک کمپین واقعی (مثلاً یادآوری جلسه بعدی) هم‌زمان از چند کانال ارسال می‌شود، و اولین اعلان معرفی محصول جدید شما در پنل حداقل یک کلینیک پایلوت دیده می‌شود.',
+  sections:[
+    {name:'ارتباط امنی‌کانال با بیمار', items:[
+      {id:'p3-1', title:'اتصال کامل پیامک، واتس‌اپ بیزینس و دایرکت اینستاگرام', desc:'پیگیری فرآیند تاییدیه که در فاز صفر آغاز شد.', tags:['بازاریابی']},
+      {id:'p3-2', title:'یادآوری جلسه بعدی بر اساس چرخه‌ی درمان', desc:'متناسب با نوع خدمت هر بیمار.', tags:['بازاریابی']},
+      {id:'p3-3', title:'پیام مراقبت خودکار پس از جلسه', desc:'راهنمای مراقبت بلافاصله بعد از هر تزریق.', tags:['بازاریابی']},
+      {id:'p3-4', title:'پرسشنامه کوتاه رضایت پس از جلسه', desc:'ورودی مستقیم برای موتور هوش مصنوعی فاز ۵.', tags:['هوش‌مصنوعی']},
+      {id:'p3-5', title:'پیام تبریک تولد و سالگرد اولین مراجعه', desc:'همراه یک پیشنهاد کوچک و شخصی.', tags:['بازاریابی','وفاداری']}
+    ]},
+    {name:'کانال معرفی هوشمند محصول جدید (منبع درآمد کلیدی)', items:[
+      {id:'p3-6', title:'طراحی اعلان معرفی محصول جدید', desc:'قابل نمایش در داشبورد هر پزشک همکار، با رعایت توافق قراردادی هر کلینیک.', tags:['بازاریابی','درآمد']},
+      {id:'p3-7', title:'پنل مدیریت کمپین محصول برای شما', desc:'انتخاب اینکه کدام محصول جدید، به کدام دسته از کلینیک‌ها (بر اساس نوع خدمت غالب) معرفی شود.', tags:['بازاریابی','درآمد']},
+      {id:'p3-8', title:'گزارش بازدید و کلیک روی هر معرفی محصول', desc:'برای سنجش اثربخشی واقعی معرفی محصول جدید در کل شبکه.', tags:['بازاریابی']},
+      {id:'p3-9', title:'رعایت رضایت صریح و لغو اشتراک آسان', desc:'الزام قانونی و همچنین استاندارد پیام‌های خودکار.', tags:['امنیت']}
+    ]}
+  ]
+},
+{
+  id:'p4', num:4, title:'باشگاه مشتریان بیمار و شبکه ارجاع/کمیسیون', weeks:'هفته ۱۲ تا ۱۴',
+  dod:'یک بیمار واقعی امتیاز و سطح خودش را می‌بیند؛ یک کلینیک واقعی، کلینیک دیگری را معرفی می‌کند و سهم فروش آن به‌صورت خودکار محاسبه می‌شود.',
+  sections:[
+    {name:'باشگاه مشتریان بیمار', items:[
+      {id:'p4-1', title:'تعریف چهار سطح عضویت بیمار', desc:'برنزی، نقره‌ای، طلایی، الماسی بر اساس ارزش خرید و تعداد معرفی.', tags:['وفاداری']},
+      {id:'p4-2', title:'موتور کسب و خرج امتیاز', desc:'خرید خدمت، معرفی بیمار جدید، تکمیل پرسشنامه رضایت، در برابر تخفیف جلسه بعدی یا هدیه.', tags:['وفاداری']},
+      {id:'p4-3', title:'کارت عضویت دیجیتال بیمار', desc:'قابل افزودن به کیف پول موبایل، بدون نیاز به نصب اپلیکیشن جداگانه.', tags:['وفاداری']},
+      {id:'p4-4', title:'ورود ساده بیمار با شماره موبایل و کد یک‌بارمصرف', desc:'بدون رمز عبور پیچیده.', tags:['امنیت']}
+    ]},
+    {name:'شبکه ارجاع و کمیسیون کلینیک به کلینیک', items:[
+      {id:'p4-5', title:'کد و لینک اختصاصی معرفی برای هر کلینیک', desc:'برای معرفی پنل به کلینیک‌های دیگر شبکه.', tags:['درآمد']},
+      {id:'p4-6', title:'ردیابی خودکار نصب و خرید کلینیک معرفی‌شده', desc:'اتصال مستقیم به تاریخچه‌ی خرید محصول در فاز ۱.', tags:['درآمد']},
+      {id:'p4-7', title:'محاسبه و نمایش شفاف سهم فروش کلینیک معرفی‌کننده', desc:'داشبورد به‌روزرسانی خودکار با هر سفارش.', tags:['درآمد']},
+      {id:'p4-8', title:'تسویه دوره‌ای کمیسیون', desc:'طبق بازه‌ی توافق‌شده در قرارداد.', tags:['درآمد']}
+    ]}
+  ]
+},
+{
+  id:'p5', num:5, title:'موتور هوش مصنوعی: تحلیل رفتار و شخصیت خرید بیمار', weeks:'هفته ۱۵ تا ۱۸',
+  dod:'هر بیمار فعال یک نشان رفتار خرید با دلیل کوتاه دارد، و هر کلینیک حداقل یک پیشنهاد بعدی هوشمند (نتیجه‌محور یا تخفیف‌محور) در پروفایل هر بیمار می‌بیند.',
+  sections:[
+    {name:'تحلیل رفتار خرید بیمار', items:[
+      {id:'p5-1', title:'ترکیب داده‌ی تازگی، فراوانی و ارزش مالی هر بیمار', desc:'همراه با واکنش او به پیام‌ها و پرسشنامه‌های رضایت جمع‌شده در فازهای ۲ تا ۴.', tags:['هوش‌مصنوعی']},
+      {id:'p5-2', title:'تعریف و تشخیص پنج تیپ رفتاری', desc:'نتیجه‌محور/علمی، لوکس‌پسند/تجربه‌گرا، تخفیف‌محور/قیمتی، محتاط/نیازمند اطمینان، وفادار/تکرارشونده.', tags:['هوش‌مصنوعی']},
+      {id:'p5-3', title:'نمایش نشان رفتار خرید', desc:'رنگی و قابل‌فهم در یک نگاه، هم در پروفایل بیمار و هم روی کارت نوبت‌دهی.', tags:['هوش‌مصنوعی','طراحی']}
+    ]},
+    {name:'موتور پیشنهاد بعدی هوشمند', items:[
+      {id:'p5-4', title:'تعریف قوانین پیشنهاد بر اساس تیپ رفتاری', desc:'برای نتیجه‌محور: ارتقای خدمت و توضیح علمی، نه تخفیف. برای تخفیف‌محور: باندل یا تخفیف زمان‌دار.', tags:['هوش‌مصنوعی']},
+      {id:'p5-5', title:'تولید خودکار متن پیام متناسب با تیپ رفتاری', desc:'آماده‌ی ارسال از کانال ترجیحی همان بیمار.', tags:['هوش‌مصنوعی','بازاریابی']},
+      {id:'p5-6', title:'افزودن «چرا این پیشنهاد» کنار هر توصیه', desc:'توضیح کوتاه تا کادر کلینیک به سیستم اعتماد کند.', tags:['هوش‌مصنوعی']},
+      {id:'p5-7', title:'اتصال خروجی موتور به سفرهای خودکار فاز ۳', desc:'پیشنهاد هوشمند مستقیماً در کانال و زمان درست ارسال شود.', tags:['هوش‌مصنوعی']}
+    ]},
+    {name:'هوش تجمیعی برای شما', items:[
+      {id:'p5-8', title:'گزارش ترکیب رفتاری بیماران در کل شبکه (ناشناس)', desc:'برای تصمیم‌گیری درباره‌ی اینکه کدام محصول جدید به کدام دسته از کلینیک‌ها معرفی شود.', tags:['هوش‌مصنوعی','درآمد']},
+      {id:'p5-9', title:'هشدار افت تعامل بیمار به کلینیک', desc:'پیش از اینکه بیمار کلینیک را واقعاً ترک کند.', tags:['هوش‌مصنوعی']}
+    ]}
+  ]
+},
+{
+  id:'p6', num:6, title:'وب‌سایت، اعتبار دیجیتال و راه‌اندازی رسمی', weeks:'هفته ۱۹ تا ۲۶، سپس مستمر',
+  dod:'وب‌سایت با ۵ مقاله منتشر شده آنلاین است، حداقل یک کلینیک پایلوت به‌صورت زنده از پنل استفاده می‌کند، و آموزش حضوری تیم برگزار شده است.',
+  sections:[
+    {name:'وب‌سایت اختصاصی و اعتبار دیجیتال', items:[
+      {id:'p6-1', title:'طراحی وب‌سایت با هویت بصری اختصاصی', desc:'متفاوت از قالب‌های عمومی نرم‌افزاری؛ در تراز جایگاه برند شما.', tags:['طراحی']},
+      {id:'p6-2', title:'صفحه اختصاصی معرفی پنل به پزشکان بالقوه', desc:'فرم درخواست دمو، متصل مستقیم به سامانه‌ی مدیریت شبکه در فاز ۱.', tags:['بازاریابی']},
+      {id:'p6-3', title:'انتشار ۵ مقاله تخصصی سئوشده رایگان', desc:'هدفمند برای عبارات جستجوی پزشکان و بیماران درباره‌ی محصولات و خدمات شما.', tags:['بازاریابی']},
+      {id:'p6-4', title:'بهینه‌سازی برای موتورهای پاسخ‌گو و هوش مصنوعی (GEO/AEO)', desc:'در کنار سئوی کلاسیک گوگل، تا وقتی کسی از ابزارهای هوش مصنوعی سوال می‌پرسد، نام شما دیده شود.', tags:['بازاریابی']}
+    ]},
+    {name:'راه‌اندازی پایلوت و آموزش', items:[
+      {id:'p6-5', title:'اجرای آزمایشی در چند کلینیک منتخب', desc:'پیش از رول‌اوت کامل به کل شبکه، ریسک را در چند کلینیک محدود کنید.', tags:['آموزش']},
+      {id:'p6-6', title:'آموزش حضوری تیم شما و ویزیتورها', desc:'با داده واقعی، نه یک دموی خالی.', tags:['آموزش']},
+      {id:'p6-7', title:'حضور تیم پیاده‌سازی طبق قرارداد', desc:'مدتی مشخص نزد سازمان/کلینیک برای رفع ایراد و آموزش تکمیلی حضوری.', tags:['آموزش']},
+      {id:'p6-8', title:'جمع‌آوری بازخورد پایلوت و اصلاح', desc:'پیش از رول‌اوت کامل به بقیه‌ی شبکه‌ی همکاران.', tags:['آموزش']}
+    ]},
+    {name:'رشد پس از راه‌اندازی', items:[
+      {id:'p6-9', title:'رول‌اوت تدریجی به کل شبکه همکاران', desc:'با اولویت کلینیک‌های با حجم خرید بالاتر.', tags:['درآمد']},
+      {id:'p6-10', title:'بازبینی ماهانه دقت موتور هوش مصنوعی', desc:'و نرخ تبدیل واقعی کمپین‌ها و کمیسیون‌های پرداخت‌شده.', tags:['هوش‌مصنوعی']},
+      {id:'p6-11', title:'ارزیابی فصلی جایگاه رقابتی', desc:'در برابر رقبای فعال در بازار؛ همیشه یک قدم جلوتر بمانید.', tags:['درآمد']}
+    ]}
+  ]
+}
+];
+
+var ALL_ITEM_IDS = [];
+PHASES.forEach(function(ph){
+  ph.sections.forEach(function(sec){
+    sec.items.forEach(function(it){ ALL_ITEM_IDS.push(it.id); });
+  });
+});
+var TOTAL_ITEMS = ALL_ITEM_IDS.length;
+
+/* ---------------- state + storage ---------------- */
+var STATE = { items:{}, notes:{} };
+var STORAGE_KEY = 'fusion-crm-roadmap-state';
+
+function loadState(){
+  try{
+    var val = window.localStorage.getItem(STORAGE_KEY);
+    if(val){
+      var parsed = JSON.parse(val);
+      if(parsed && typeof parsed === 'object'){
+        STATE.items = parsed.items || {};
+        STATE.notes = parsed.notes || {};
+      }
+    }
+  }catch(e){}
+}
+function saveState(){
+  try{
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({items:STATE.items, notes:STATE.notes}));
+  }catch(e){}
+}
+
+/* ---------------- gauge ---------------- */
+var GX=110, GY=115, GR=78;
+function pt(cx,cy,r,phiDeg){
+  var phi = phiDeg*Math.PI/180;
+  return { x: cx + r*Math.sin(phi), y: cy - r*Math.cos(phi) };
+}
+function arcPath(cx,cy,r,a1,a2){
+  var s = pt(cx,cy,r,a1), e = pt(cx,cy,r,a2);
+  var large = (a2-a1) > 180 ? 1 : 0;
+  return 'M '+s.x.toFixed(2)+' '+s.y.toFixed(2)+' A '+r+' '+r+' 0 '+large+' 1 '+e.x.toFixed(2)+' '+e.y.toFixed(2);
+}
+function initGauge(){
+  var zonesG = document.getElementById('zones');
+  if(!zonesG) return;
+  var zones = [
+    {a1:-120, a2:-40, color:'#c8545c'},
+    {a1:-40,  a2:40,  color:'#c9a459'},
+    {a1:40,   a2:120, color:'#3f9c72'}
+  ];
+  zones.forEach(function(z){
+    var p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d', arcPath(GX,GY,GR,z.a1,z.a2));
+    p.setAttribute('fill','none');
+    p.setAttribute('stroke', z.color);
+    p.setAttribute('stroke-width','9');
+    p.setAttribute('stroke-linecap','round');
+    p.setAttribute('opacity','0.4');
+    zonesG.appendChild(p);
+  });
+  var ticksG = document.getElementById('ticks');
+  if(!ticksG) return;
+  for(var i=0;i<=4;i++){
+    var ang = -120 + i*60;
+    var p1 = pt(GX,GY,GR+8,ang), p2 = pt(GX,GY,GR+13,ang);
+    var line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',p1.x);line.setAttribute('y1',p1.y);
+    line.setAttribute('x2',p2.x);line.setAttribute('y2',p2.y);
+    line.setAttribute('class','gauge-tick');
+    ticksG.appendChild(line);
+  }
+}
+function updateGauge(percent){
+  var angle = -120 + (240 * (percent||0)/100);
+  var needle = document.getElementById('needle');
+  if(needle) needle.style.transform = 'rotate('+angle+'deg)';
+  var pctEl = document.getElementById('overallPct');
+  if(pctEl) pctEl.textContent = toFa(percent||0)+'٪';
+}
+
+/* ---------------- ui state ---------------- */
+var uiState = {
+  activeTab:'overview',
+  activePhase:'p0',
+  search:'',
+  activeTags:{},
+  pendingOnly:false
+};
+
+/* ---------------- rendering ---------------- */
+function countDone(items){
+  var d=0; items.forEach(function(it){ if(STATE.items[it.id]) d++; });
+  return d;
+}
+function phaseItems(phase){
+  var arr=[];
+  phase.sections.forEach(function(sec){ sec.items.forEach(function(it){ arr.push(it); }); });
+  return arr;
+}
+function overallProgress(){
+  var done=0;
+  ALL_ITEM_IDS.forEach(function(id){ if(STATE.items[id]) done++; });
+  return { done:done, total:TOTAL_ITEMS, pct: TOTAL_ITEMS? Math.round(done/TOTAL_ITEMS*100):0 };
+}
+
+function renderHeader(){
+  var o = overallProgress();
+  updateGauge(o.pct);
+  var countEl = document.getElementById('overallCount');
+  if(countEl) countEl.textContent = toFa(o.done)+' از '+toFa(o.total);
+}
+
+function renderPhaseRail(){
+  var rail = document.getElementById('phaseRail');
+  if(!rail) return;
+  rail.innerHTML = '';
+  PHASES.forEach(function(ph){
+    var items = phaseItems(ph);
+    var done = countDone(items);
+    var pct = items.length ? Math.round(done/items.length*100) : 0;
+    var pill = document.createElement('button');
+    pill.className = 'phase-pill' + (ph.id===uiState.activePhase?' active':'') + (pct===100?' done':'');
+    pill.innerHTML =
+      '<div class="pnum">'+(pct===100?'✓':toFa(ph.num))+'</div>'+
+      '<div class="ptext">'+
+        '<div class="ptitle">'+ph.title+'</div>'+
+        '<div class="pmeta">'+toFa(done)+'/'+toFa(items.length)+' · '+ph.weeks+'</div>'+
+        '<div class="pbar"><i style="width:'+pct+'%"></i></div>'+
+      '</div>';
+    pill.addEventListener('click', function(e){
+      e.preventDefault();
+      uiState.activePhase = ph.id;
+      uiState.search=''; uiState.activeTags={}; uiState.pendingOnly=false;
+      renderPhaseRail(); renderPhaseContent();
+    });
+    rail.appendChild(pill);
+  });
+}
+
+function collectTags(phase){
+  var set = {};
+  phaseItems(phase).forEach(function(it){ it.tags.forEach(function(t){ set[t]=true; }); });
+  return Object.keys(set);
+}
+
+function itemMatchesFilters(it){
+  if(uiState.pendingOnly && STATE.items[it.id]) return false;
+  var activeTagKeys = Object.keys(uiState.activeTags).filter(function(k){return uiState.activeTags[k];});
+  if(activeTagKeys.length){
+    var hit = it.tags.some(function(t){ return uiState.activeTags[t]; });
+    if(!hit) return false;
+  }
+  if(uiState.search){
+    var q = uiState.search.toLowerCase();
+    var hay = (it.title+' '+it.desc).toLowerCase();
+    if(hay.indexOf(q)===-1) return false;
+  }
+  return true;
+}
+
+function renderPhaseContent(itemsOnly){
+  var phase = PHASES.filter(function(p){return p.id===uiState.activePhase;})[0];
+  var wrap = document.getElementById('phaseContent');
+  var items = phaseItems(phase);
+  var tags = collectTags(phase);
+
+  if(!itemsOnly){
+    var html = '';
+    html += '<div class="phase-head">';
+    html += '  <div class="eyebrow">فاز '+toFa(phase.num)+' · '+phase.weeks+'</div>';
+    html += '  <h2>'+phase.title+'</h2>';
+    html += '  <div class="dod"><b>تعریف پایان فاز: </b>'+phase.dod+'</div>';
+    html += '</div>';
+
+    html += '<div class="controls-row">';
+    html += '  <input type="text" class="searchbox" id="searchInput" placeholder="جستجو در کارهای این فاز…" value="'+uiState.search.replace(/"/g,'')+'">';
+    tags.forEach(function(t){
+      html += '<button type="button" class="chip'+(uiState.activeTags[t]?' on':'')+'" data-tag="'+t+'">'+t+'</button>';
+    });
+    html += '  <button type="button" class="toggle-pending'+(uiState.pendingOnly?' on':'')+'" id="pendingToggle">فقط انجام‌نشده‌ها</button>';
+    html += '</div>';
+
+    html += '<div id="phaseItemsWrap"></div>';
+
+    html += '<div class="section-block">';
+    html += '  <div class="section-head"><h3>یادداشت‌های این فاز</h3></div>';
+    html += '  <div class="notes-box"><textarea id="phaseNotes" placeholder="نکته، تصمیم یا موردی که برای این فاز باید یادت بماند…">'+(STATE.notes[phase.id]||'')+'</textarea></div>';
+    html += '</div>';
+
+    wrap.innerHTML = html;
+
+    var search = document.getElementById('searchInput');
+    search.addEventListener('input', function(e){ uiState.search = e.target.value; renderPhaseContent(true); });
+
+    qsa('.chip').forEach(function(chip){
+      chip.addEventListener('click', function(){
+        var t = chip.getAttribute('data-tag');
+        uiState.activeTags[t] = !uiState.activeTags[t];
+        chip.className = 'chip' + (uiState.activeTags[t]?' on':'');
+        renderPhaseContent(true);
+      });
+    });
+    var pendingToggle = document.getElementById('pendingToggle');
+    pendingToggle.addEventListener('click', function(){
+      uiState.pendingOnly = !uiState.pendingOnly;
+      pendingToggle.className = 'toggle-pending' + (uiState.pendingOnly?' on':'');
+      renderPhaseContent(true);
+    });
+    var notesArea = document.getElementById('phaseNotes');
+    notesArea.addEventListener('input', function(){
+      STATE.notes[phase.id] = notesArea.value;
+      saveState();
+    });
+  }
+
+  var itemsWrap = document.getElementById('phaseItemsWrap');
+  if(!itemsWrap) return;
+
+  var itemsHtml = '';
+  var anyVisible = false;
+  phase.sections.forEach(function(sec, si){
+    var visibleItems = sec.items.filter(itemMatchesFilters);
+    if(!visibleItems.length) return;
+    anyVisible = true;
+    var secDone = countDone(sec.items);
+    itemsHtml += '<div class="section-block">';
+    itemsHtml += '  <div class="section-head"><h3>'+sec.name+' <span class="cnt">'+toFa(secDone)+'/'+toFa(sec.items.length)+'</span></h3>';
+    itemsHtml += '  <button type="button" class="mark-all" data-section="'+si+'">علامت زدن کل بخش</button></div>';
+    visibleItems.forEach(function(it){
+      var checked = !!STATE.items[it.id];
+      itemsHtml += '<label class="item'+(checked?' checked':'')+'">';
+      itemsHtml += '  <input type="checkbox" data-id="'+it.id+'" '+(checked?'checked':'')+'>';
+      itemsHtml += '  <div class="item-body">';
+      itemsHtml += '    <div class="item-title">'+it.title+'</div>';
+      itemsHtml += '    <div class="item-desc">'+it.desc+'</div>';
+      itemsHtml += '    <div class="item-tags">'+it.tags.map(function(t){return '<span class="tag" data-tag="'+t+'">'+t+'</span>';}).join('')+'</div>';
+      itemsHtml += '  </div>';
+      itemsHtml += '</label>';
+    });
+    itemsHtml += '</div>';
+  });
+
+  if(!anyVisible){
+    itemsHtml += '<div class="empty-state">چیزی با این فیلترها پیدا نشد. فیلتر را عوض کن.</div>';
+  }
+
+  itemsWrap.innerHTML = itemsHtml;
+
+  qsa('input[type=checkbox][data-id]', itemsWrap).forEach(function(cb){
+    cb.addEventListener('change', function(){
+      var id = cb.getAttribute('data-id');
+      STATE.items[id] = cb.checked;
+      saveState();
+      renderHeader();
+      renderPhaseRail();
+      renderPhaseContent(true);
+    });
+  });
+  qsa('.mark-all', itemsWrap).forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var idx = +btn.getAttribute('data-section');
+      phase.sections[idx].items.forEach(function(it){ STATE.items[it.id] = true; });
+      saveState(); renderHeader(); renderPhaseRail(); renderPhaseContent(true);
+    });
+  });
+}
+
+/* ---------------- tabs ---------------- */
+function bindTabs(){
+  qsa('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      qsa('.tab-btn').forEach(function(b){b.classList.remove('active');});
+      qsa('.tabpanel').forEach(function(p){p.classList.remove('active');});
+      btn.classList.add('active');
+      var targetId = 'tab-' + btn.getAttribute('data-tab');
+      var panel = document.getElementById(targetId);
+      if(panel) panel.classList.add('active');
+      uiState.activeTab = btn.getAttribute('data-tab');
+      try { window.scrollTo({top:0, behavior:'smooth'}); } catch(err) { window.scrollTo(0,0); }
+    });
+  });
+}
+
+/* ---------------- footer actions ---------------- */
+function bindFooter(){
+  var btnPrint = document.getElementById('btnPrint');
+  var btnReset = document.getElementById('btnReset');
+
+  if(btnPrint){
+    btnPrint.addEventListener('click', function(e){
+      e.preventDefault();
+      window.print();
+    });
+  }
+
+  if(btnReset){
+    btnReset.addEventListener('click', function(e){
+      e.preventDefault();
+      if(confirm('کل پیشرفت ثبت‌شده در این نقشه راه پاک شود؟ این کار قابل بازگشت نیست.')){
+        STATE.items = {}; STATE.notes = {};
+        saveState();
+        renderHeader(); renderPhaseRail(); renderPhaseContent();
+      }
+    });
+  }
+}
+
+/* ---------------- init ---------------- */
+function initApp(){
+  try {
+    initGauge();
+    bindTabs();
+    bindFooter();
+    loadState();
+    renderHeader();
+    renderPhaseRail();
+    renderPhaseContent();
+  } catch(err){
+    console.error(err);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
+
+})();
+</script>
+</body>
+</html>
